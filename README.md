@@ -21,3 +21,16 @@ ShaderOccuranceWindow
 ---------------------
 
 Find materials based on a specific shader. Found in `Tools/Shader Occurance`.
+
+ComponentPropertyCopy
+---------------------
+
+Copy properties from one component to another in bulk.
+
+`Script Properties` and `Script Fields` are all fields and properties on the component. `Properties` are manually added properties that require special steps to modify, like for example Mesh Renderer blend shapes.
+
+Dragging one or more gameobjects to the header of the `Destinations` list will add all componets matching the type of `Source` to the list.
+
+Note that **not all properties this script modifies are undoable**, so be careful.
+
+Found in `Tools/Component Property Copy`.
