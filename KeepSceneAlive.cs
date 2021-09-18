@@ -1,16 +1,16 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿#if (UNITY_EDITOR)
+using UnityEngine;
 using UnityEditor;
 
 public class KeepSceneAlive : MonoBehaviour
 {
-    public bool KeepSceneViewActive = true;
+    public bool KeepSceneViewActive = true ;
 
     void Start()
     {
-        if (this.KeepSceneViewActive && Application.isEditor)
+        if (KeepSceneViewActive && Application.isEditor)
         {
-            UnityEditor.SceneView.FocusWindowIfItsOpen(typeof(UnityEditor.SceneView));
+            EditorWindow.FocusWindowIfItsOpen(typeof(SceneView));
         }
     }
 	
@@ -20,3 +20,4 @@ public class KeepSceneAlive : MonoBehaviour
 		go.AddComponent<KeepSceneAlive>();
     }
 }
+#endif
