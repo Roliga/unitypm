@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace ComponentPropertyCopy
 {
-	public class ComponentPropertyCopy : EditorWindow
+	public partial class ComponentPropertyCopy : EditorWindow
 	{
 		Component src;
 		public List<Component> dsts = new List<Component>();
@@ -33,32 +33,6 @@ namespace ComponentPropertyCopy
 			GetWindow<ComponentPropertyCopy>();
 		}
 
-		class QuirkList : Dictionary<string, Action<Component, Component>> { }
-
-		Dictionary<Type, QuirkList> Quirks = new Dictionary<Type, QuirkList>()
-		{
-			[typeof(SkinnedMeshRenderer)] = new QuirkList()
-			{
-				["Blend Shapes"] = (inComp, outComp) =>
-				{
-					SkinnedMeshRenderer inMesh = (SkinnedMeshRenderer)inComp;
-					SkinnedMeshRenderer outMesh = (SkinnedMeshRenderer)outComp;
-					for (int i = 0; i < inMesh.sharedMesh.blendShapeCount; i++)
-					{
-						string name = inMesh.sharedMesh.GetBlendShapeName(i);
-						int toIndex = outMesh.sharedMesh.GetBlendShapeIndex(name);
-
-						if (toIndex != -1)
-							outMesh.SetBlendShapeWeight(toIndex, inMesh.GetBlendShapeWeight(i));
-					}
-				}
-			},
-			[typeof(MeshCollider)] = new QuirkList()
-			{
-				["What"] = (inComp, outComp) => { },
-				["The"] = (inComp, outComp) => { }
-			}
-		};
 
 		void SetupDst()
 		{

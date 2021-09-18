@@ -27,7 +27,9 @@ ComponentPropertyCopy
 
 Copy properties from one component to another in bulk.
 
-`Script Properties` and `Script Fields` are all fields and properties on the component. `Properties` are manually added properties that require special steps to modify, like for example Mesh Renderer blend shapes.
+`Script Properties` and `Script Fields` are all fields and properties on the component.
+
+`Properties` are manually added properties that require special steps to modify, like for example Mesh Renderer blend shapes. More of these can be added in `Quirks.cs`. Please send a PR if you add any useful ones!
 
 Dragging one or more gameobjects to the header of the `Destinations` list will add all componets matching the type of `Source` to the list.
 
