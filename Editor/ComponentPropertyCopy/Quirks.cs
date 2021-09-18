@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityUtils;
 
@@ -73,11 +70,11 @@ namespace ComponentPropertyCopy
 						kept);
 				}
 			},
-			[typeof(MeshCollider)] = new QuirkList()
-			{
-				["What"] = (inComp, outComp) => { },
-				["The"] = (inComp, outComp) => { }
-			}
+			// [typeof(#SOME COMPONENT#)] = new QuirkList()
+			// {
+			// 	["#PROPERTY NAME#"] = (inComp, outComp) => { #COPY FROM inComp TO outComp HERE# },
+			// 	["#PROPERTY NAME#"] = (inComp, outComp) => { #COPY FROM inComp TO outComp HERE# }
+			// }
 		};
 	}
 }
