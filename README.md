@@ -8,19 +8,19 @@ InspectorLockToggle
 
 A menu entry and hotkey for toggling the lock on the Inspector window currently under the cursor.
 
-Entry is found in `Tools/Toggle Inspector Lock`, and the default binding is `Alt + E`.
+Entry is found in `Tools/Unity Utils/Toggle Inspector Lock`, and the default binding is `Alt + E`.
 
 KeepSceneAlive
 --------------
 
 Keeps the Scene view focused when entering play mode instead of switching to the Game view.
 
-Enabled from `Tools/Enable Keep Scene Alive`. A GameObject is created in the scene with a toggle to enable/disable the script.
+Enabled from `Tools/Unity Utils/Enable Keep Scene Alive`. A GameObject is created in the scene with a toggle to enable/disable the script.
 
 ShaderOccuranceWindow
 ---------------------
 
-Find materials based on a specific shader. Found in `Tools/Shader Occurance`.
+Find materials based on a specific shader. Found in `Tools/Unity Utils/Shader Occurance`.
 
 ComponentPropertyCopy
 ---------------------
@@ -35,4 +35,4 @@ Dragging one or more gameobjects to the header of the `Destinations` list will a
 
 Note that **not all properties this script modifies are undoable**, so be careful.
 
-Found in `Tools/Component Property Copy`.
+Found in `Tools/Unity Utils/Component Property Copy`.

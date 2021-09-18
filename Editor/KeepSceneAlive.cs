@@ -14,7 +14,7 @@ public class KeepSceneAlive : MonoBehaviour
         }
     }
 	
-	[MenuItem("Tools/Enable Keep Scene Alive")]
+	[MenuItem("Tools/Unity Utils/Enable Keep Scene Alive")]
     public static void EnableAv3Testing() {
 		GameObject go = new GameObject("Keep Scene Alive Control");
 		go.AddComponent<KeepSceneAlive>();

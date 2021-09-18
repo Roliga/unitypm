@@ -7,7 +7,7 @@
  
  public class ShaderOccurenceWindow : EditorWindow
  {
-     [MenuItem("Tools/Shader Occurence")]
+     [MenuItem("Tools/Unity Utils/Shader Occurence")]
      public static void Open()
      {
          GetWindow<ShaderOccurenceWindow>();

@@ -6,7 +6,7 @@ using System.Reflection;
  
 static class InspectorLockToggle
 {
-	[MenuItem("Tools/Toggle Inspector Lock &e")]
+	[MenuItem("Tools/Unity Utils/Toggle Inspector Lock &e")]
 	static void SelectLockableInspector()
 	{
 		EditorWindow inspectorToBeLocked = EditorWindow.mouseOverWindow; // "EditorWindow.focusedWindow" can be used instead

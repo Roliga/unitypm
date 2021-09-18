@@ -26,7 +26,7 @@ namespace ComponentPropertyCopy
 
 		Vector2 scrollPos;
 
-		[MenuItem("Tools/Component Property Copy")]
+		[MenuItem("Tools/Unity Utils/Component Property Copy")]
 		public static void Open()
 		{
 			GetWindow<ComponentPropertyCopy>();
