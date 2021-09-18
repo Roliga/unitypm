@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
-using System.IO;
 using UnityEditorInternal;
 using System;
 using System.Reflection;
@@ -78,32 +77,17 @@ namespace ComponentPropertyCopy
 			props.Props.Clear();
 			Type type = src.GetType();
 			if (Quirks.ContainsKey(type))
-			{
 				foreach (string key in Quirks[type].Keys)
-				{
 					props.Props.Add(new PropertyEntry(key));
-				}
-			}
 
 			propsScript.Props.Clear();
 			foreach (PropertyInfo f in src.GetType().GetProperties())
-			{
-				SerializedObject s = new SerializedObject(src);
-				SerializedProperty p = s.FindProperty(f.Name);
-
 				if (f.CanWrite && f.CanRead)
 					propsScript.Props.Add(new PropertyEntry(f.Name));
-			}
 
 			propsScriptFields.Props.Clear();
 			foreach (FieldInfo f in src.GetType().GetFields())
-			{
-				SerializedObject s = new SerializedObject(src);
-				SerializedProperty p = s.FindProperty(f.Name);
-
-				if (true)
-					propsScriptFields.Props.Add(new PropertyEntry(f.Name));
-			}
+				propsScriptFields.Props.Add(new PropertyEntry(f.Name));
 
 			props.Visible = true;
 			propsScript.Visible = true;

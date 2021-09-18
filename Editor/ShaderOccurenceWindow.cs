@@ -43,8 +43,7 @@
                  {
                      GUILayout.Label(Path.GetFileNameWithoutExtension(materials[i]));
                      GUILayout.FlexibleSpace();
-                     //if (GUILayout.Button("Show"))
-                     //    EditorGUIUtility.PingObject(AssetDatabase.LoadAssetAtPath(materials[i], typeof(Material)));
+
                      if (GUILayout.Button("Select"))
                          Selection.activeObject = AssetDatabase.LoadAssetAtPath(materials[i], typeof(Material));
                  }
