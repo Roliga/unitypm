@@ -3,21 +3,24 @@
 using UnityEditor;
 using System;
 using System.Reflection;
- 
-static class InspectorLockToggle
+
+namespace UnityUtils
 {
-	[MenuItem("Tools/Unity Utils/Toggle Inspector Lock &e")]
-	static void SelectLockableInspector()
+	static class InspectorLockToggle
 	{
-		EditorWindow inspectorToBeLocked = EditorWindow.mouseOverWindow; // "EditorWindow.focusedWindow" can be used instead
-		if (inspectorToBeLocked != null  && inspectorToBeLocked.GetType().Name == "InspectorWindow")
+		[MenuItem("Tools/Unity Utils/Toggle Inspector Lock &e")]
+		static void SelectLockableInspector()
 		{
-			Type type = Assembly.GetAssembly(typeof(UnityEditor.Editor)).GetType("UnityEditor.InspectorWindow");
-			PropertyInfo propertyInfo = type.GetProperty("isLocked");
-			bool value = (bool)propertyInfo.GetValue(inspectorToBeLocked, null);
-			propertyInfo.SetValue(inspectorToBeLocked, !value, null);
-		 
-			inspectorToBeLocked.Repaint();
+			EditorWindow inspectorToBeLocked = EditorWindow.mouseOverWindow; // "EditorWindow.focusedWindow" can be used instead
+			if (inspectorToBeLocked != null && inspectorToBeLocked.GetType().Name == "InspectorWindow")
+			{
+				Type type = Assembly.GetAssembly(typeof(UnityEditor.Editor)).GetType("UnityEditor.InspectorWindow");
+				PropertyInfo propertyInfo = type.GetProperty("isLocked");
+				bool value = (bool)propertyInfo.GetValue(inspectorToBeLocked, null);
+				propertyInfo.SetValue(inspectorToBeLocked, !value, null);
+
+				inspectorToBeLocked.Repaint();
+			}
 		}
 	}
 }

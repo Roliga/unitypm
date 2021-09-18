@@ -5,7 +5,7 @@ using UnityEditorInternal;
 using System;
 using System.Reflection;
 
-namespace ComponentPropertyCopy
+namespace UnityUtils.ComponentPropertyCopy
 {
 	public partial class ComponentPropertyCopy : EditorWindow
 	{

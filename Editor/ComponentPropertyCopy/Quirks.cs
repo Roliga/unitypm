@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityUtils;
 
-namespace ComponentPropertyCopy
+namespace UnityUtils.ComponentPropertyCopy
 {
 	public class QuirkList : Dictionary<string, Action<Component, Component>> { }
 

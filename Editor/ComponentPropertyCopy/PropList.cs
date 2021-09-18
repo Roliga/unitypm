@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using UnityEditorInternal;
 
-namespace ComponentPropertyCopy
+namespace UnityUtils.ComponentPropertyCopy
 {
 	class PropList
 	{
