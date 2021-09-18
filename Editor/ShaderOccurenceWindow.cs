@@ -1,6 +1,5 @@
 ﻿// Source: http://answers.unity.com/answers/1261573/view.html
 
-#if (UNITY_EDITOR)
  using UnityEngine;
  using UnityEditor;
  using System.Collections.Generic;
@@ -55,4 +54,3 @@
          GUILayout.EndScrollView();
      }
  }
- #endif

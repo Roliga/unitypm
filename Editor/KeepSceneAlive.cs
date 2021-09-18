@@ -1,5 +1,4 @@
-﻿#if (UNITY_EDITOR)
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using UnityEditor;
 
@@ -21,4 +20,3 @@ public class KeepSceneAlive : MonoBehaviour
 		go.AddComponent<KeepSceneAlive>();
     }
 }
-#endif

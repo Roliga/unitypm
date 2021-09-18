@@ -1,5 +1,4 @@
-﻿#if (UNITY_EDITOR)
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using UnityEditorInternal;
@@ -93,4 +92,3 @@ namespace ComponentPropertyCopy
 		}
 	}
 }
-#endif

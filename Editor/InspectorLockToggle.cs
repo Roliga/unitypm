@@ -1,6 +1,5 @@
 ﻿// Source: https://forum.unity.com/threads/shortcut-key-for-lock-inspector.95815/#post-3613249
 
-#if (UNITY_EDITOR)
 using UnityEditor;
 using System;
 using System.Reflection;
@@ -22,4 +21,3 @@ static class InspectorLockToggle
 		}
 	}
 }
-#endif
