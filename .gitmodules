@@ -1,0 +1,3 @@
+[submodule "Editor/UnityPM/SimpleJSON"]
+	path = Editor/UnityPM/SimpleJSON
+	url = https://github.com/Bunny83/SimpleJSON.git
