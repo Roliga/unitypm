@@ -99,6 +99,22 @@ namespace UnityUtils.UnityPM
             //Debug.Log("Done");
         }
 
+        bool MatchPackage(Package package, string searchString)
+        {
+            if (package.name?.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
+                return true;
+
+            foreach (Installable i in package.files)
+                if (i.Name?.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
+                    return true;
+
+            foreach (Installable i in package.unityPackages)
+                if (i.Name?.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
+                    return true;
+
+            return false;
+        }
+
         void DrawPackages()
         {
             if (GUILayout.Button("Test"))
@@ -125,7 +141,7 @@ namespace UnityUtils.UnityPM
 
             foreach (Package package in packages)
             {
-                if (package.name?.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) < 0)
+                if (!MatchPackage(package, searchText))
                     continue;
 
                 EditorGUILayout.LabelField(package.name ?? "Unnamed Package");
