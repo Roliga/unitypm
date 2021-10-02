@@ -125,10 +125,10 @@ namespace UnityUtils.UnityPM
 
             foreach (Package package in packages)
             {
-                if (package.name.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) < 0)
+                if (package.name?.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) < 0)
                     continue;
 
-                EditorGUILayout.LabelField(package.name);
+                EditorGUILayout.LabelField(package.name ?? "Unnamed Package");
 
                 if (package.unityPackages?.Count > 0)
                 {
