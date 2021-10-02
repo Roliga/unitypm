@@ -26,14 +26,21 @@ namespace UnityUtils.UnityPM
                 return responseJSON;
             }
         }
-        public static JSONObject APIGet(Uri apiURI, string relativeUri, string bearer, NameValueCollection queryParams)
+        public static JSONObject APIGet(Uri apiURI, string relativeUri = null, string bearer = null, NameValueCollection queryParams = null)
         {
             using (WebClient client = new WebClient())
             {
-                client.Headers[HttpRequestHeader.Authorization] = $"Bearer {bearer}";
+                if (!(bearer is null))
+                    client.Headers[HttpRequestHeader.Authorization] = $"Bearer {bearer}";
                 client.QueryString = queryParams;
 
-                string responsebody = client.DownloadString(new Uri(apiURI, relativeUri));
+                Uri uri;
+                if (relativeUri is null)
+                    uri = apiURI;
+                else
+                    uri = new Uri(apiURI, relativeUri);
+
+                string responsebody = client.DownloadString(uri);
                 Debug.Log(responsebody);
 
                 JSONObject responseJSON = (JSONObject)JSON.Parse(responsebody);
