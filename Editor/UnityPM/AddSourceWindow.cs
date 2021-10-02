@@ -8,15 +8,44 @@ using UnityEngine;
 
 namespace UnityUtils.UnityPM
 {
-    class AddSourceWindow : PopupWindowContent
+    class AddSourceWindow : EditSourceWindow
     {
         private ISource source;
-        private ISourceEditUI editUI;
         private List<ISource> sourceList;
+
+        protected override void DrawConfirmButton()
+        {
+            if (GUILayout.Button("Add"))
+            {
+                editUI.Apply();
+                sourceList.Add(source);
+                editorWindow.Close();
+            }
+        }
+
+        public AddSourceWindow(ISourceWithEditUI source, List<ISource> sourceList) : base(source)
+        {
+            this.source = source;
+            this.sourceList = sourceList;
+        }
+    }
+
+    class EditSourceWindow : PopupWindowContent
+    {
+        protected ISourceEditUI editUI;
 
         public override Vector2 GetWindowSize()
         {
             return new Vector2(400, 200);
+        }
+
+        protected virtual void DrawConfirmButton()
+        {
+            if (GUILayout.Button("Apply"))
+            {
+                editUI.Apply();
+                editorWindow.Close();
+            }
         }
 
         public override void OnGUI(Rect rect)
@@ -26,14 +55,9 @@ namespace UnityUtils.UnityPM
             GUILayout.FlexibleSpace();
 
             GUILayout.BeginHorizontal();
-            GUI.enabled = valid;
-            if (GUILayout.Button("Add"))
-            {
-                editUI.Apply();
-                sourceList.Add(source);
-                editorWindow.Close();
-            }
-            GUI.enabled = true;
+            EditorGUI.BeginDisabledGroup(!valid);
+            DrawConfirmButton();
+            EditorGUI.EndDisabledGroup();
             if (GUILayout.Button("Cancel"))
             {
                 editorWindow.Close();
@@ -41,11 +65,9 @@ namespace UnityUtils.UnityPM
             GUILayout.EndHorizontal();
         }
 
-        public AddSourceWindow(ISourceWithEditUI source, List<ISource> sourceList)
+        public EditSourceWindow(ISourceWithEditUI source)
         {
-            this.source = source;
             this.editUI = source.GetEditUI();
-            this.sourceList = sourceList;
         }
     }
 }

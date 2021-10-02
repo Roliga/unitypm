@@ -110,7 +110,19 @@ namespace UnityUtils.UnityPM
                     },
                     drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
                     {
-                        EditorGUI.LabelField(rect, sources[index].Name);
+                        ISource source = sources[index];
+                        EditorGUI.LabelField(rect, source.Name);
+
+                        if (source is ISourceWithEditUI)
+                        {
+                            Rect buttonRect = rect;
+                            buttonRect.xMin = rect.xMax - 50;
+                            buttonRect.xMax = rect.xMax;
+                            if (GUI.Button(buttonRect, "Edit"))
+                            {
+                                PopupWindow.Show(buttonRect, new EditSourceWindow((ISourceWithEditUI)source));
+                            }
+                        }
                     },
                     onAddDropdownCallback = (Rect buttonRect, ReorderableList l) =>
                     {
