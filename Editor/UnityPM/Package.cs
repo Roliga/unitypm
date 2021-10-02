@@ -22,7 +22,11 @@ namespace UnityUtils.UnityPM
     {
         public string Name { get; }
 
-        public virtual WebClient GetWebClient() { return new WebClient(); }
+        public virtual WebClient GetWebClient() {
+            WebClient wc = new WebClient();
+            wc.Headers.Add("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0");
+            return wc;
+        }
         public abstract Uri GetURI();
 
         public Installable(string name)
