@@ -83,22 +83,6 @@ namespace UnityUtils.UnityPM
             settings.SaveSettings();
         }
 
-        private void TestStuff()
-        {
-            //Sources.GumroadSource source = new Sources.GumroadSource();
-            //List<Package> p = source.GetPackages();
-            foreach(EditorWindow w in Resources.FindObjectsOfTypeAll<EditorWindow>())
-            {
-                if(w.titleContent.text == "Import Unity Package")
-                {
-                    Debug.Log(w.GetType().Name);
-                }
-            }
-            //Debug.Log("AAAA");
-            //CodeStage.PackageToFolder.Package2Folder.ImportPackageToFolder(@"C:\Users\Roliga\Desktop\hmm.unitypackage", "Import", true);
-            //Debug.Log("Done");
-        }
-
         bool MatchPackage(Package package, string searchString)
         {
             if (package.name?.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
@@ -117,9 +101,6 @@ namespace UnityUtils.UnityPM
 
         void DrawPackages()
         {
-            if (GUILayout.Button("Test"))
-                TestStuff();
-
             EditorGUILayout.BeginVertical();
             if (GUILayout.Button("Refresh"))
             {
