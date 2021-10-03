@@ -32,6 +32,10 @@ namespace UnityUtils.UnityPM
             {
                 if (!(bearer is null))
                     client.Headers[HttpRequestHeader.Authorization] = $"Bearer {bearer}";
+
+                client.Headers[HttpRequestHeader.UserAgent] = "Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0";
+                client.Headers[HttpRequestHeader.Accept] = "application/json";
+
                 client.QueryString = queryParams;
 
                 Uri uri;
@@ -48,5 +52,9 @@ namespace UnityUtils.UnityPM
                 return responseJSON;
             }
         }
-    }
+        public static JSONObject APIGet(string apiURI, string relativeUri = null, string bearer = null, NameValueCollection queryParams = null)
+        {
+            return APIGet(new Uri(apiURI), relativeUri, bearer, queryParams);
+        }
+     }
 }
