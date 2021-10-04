@@ -74,7 +74,7 @@ namespace UnityUtils.UnityPM
             Failed
         }
 
-        [MenuItem("Tools/Unity Utils/UnityPM")]
+        [MenuItem("Tools/UnityPM")]
         public static void Open()
         {
             GetWindow<UnityPM>();
