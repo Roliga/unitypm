@@ -73,7 +73,7 @@ namespace UnityUtils.UnityPM.Sources
 
         private Package MakePackage(JSONObject releaseJSON)
         {
-            Package package = new Package { name = releaseJSON["name"] };
+            Package package = new Package(this) { name = releaseJSON["name"] };
 
             foreach (JSONObject assetJSON in releaseJSON["assets"])
             {

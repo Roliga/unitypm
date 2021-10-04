@@ -90,7 +90,7 @@ namespace UnityUtils.UnityPM.Sources
 
             DirectoryInfo directory = new DirectoryInfo(path);
 
-            Package package = new Package();
+            Package package = new Package(this);
             package.name = directory.Name;
             foreach(var file in directory.GetFiles(searchPattern))
                 if(file.Extension == ".unitypackage")
@@ -105,7 +105,7 @@ namespace UnityUtils.UnityPM.Sources
                 {
                     foreach (DirectoryInfo d in directory.GetDirectories("*", SearchOption.AllDirectories))
                     {
-                        Package p = new Package();
+                        Package p = new Package(this);
                         p.name = d.Name;
                         foreach (var file in d.GetFiles(searchPattern))
                             if (file.Extension == ".unitypackage")

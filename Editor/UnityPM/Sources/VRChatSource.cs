@@ -14,7 +14,7 @@ namespace UnityUtils.UnityPM.Sources
         {
             return new List<Package>()
             {
-                new Package()
+                new Package(this)
                 {
                     name = "VRChat SDK3",
                     unityPackages = new List<UnityPackage>()
@@ -23,7 +23,7 @@ namespace UnityUtils.UnityPM.Sources
                         new SimpleUnityPackage("SDK3 Avatars", new Uri(@"https://vrchat.com/download/sdk3-avatars"))
                     }
                 },
-                new Package()
+                new Package(this)
                 {
                     name = "VRChat SDK2",
                     unityPackages = new List<UnityPackage>()

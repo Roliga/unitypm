@@ -82,7 +82,7 @@ namespace UnityUtils.UnityPM.Sources
             if(manifestJSON["packages"] is JSONArray)
                 foreach(JSONNode packageJSON in manifestJSON["packages"])
                 {
-                    Package package = new Package();
+                    Package package = new Package(this);
 
                     if (packageJSON["name"] is null)
                         package.name = "Unnamed Package";

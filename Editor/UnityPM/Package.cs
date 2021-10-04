@@ -16,6 +16,12 @@ namespace UnityUtils.UnityPM
         public string name;
         public bool GUIFoldoutPackages;
         public bool GUIFoldoutFiles;
+        public ISource source;
+
+        public Package(ISource source)
+        {
+            this.source = source;
+        }
     }
 
     public abstract class Installable
