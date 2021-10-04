@@ -29,6 +29,34 @@ namespace UnityUtils.UnityPM
 
         Settings settings;
 
+        private static class Styles
+        {
+            public static readonly GUIStyle paddedArea = new GUIStyle();
+            public static readonly GUIStyle searchField = new GUIStyle(EditorStyles.toolbarSearchField);
+            public static readonly GUIStyle scroll = new GUIStyle("HelpBox");
+            public static readonly GUIStyle packageEven = new GUIStyle("Box");
+            public static readonly GUIStyle packageOdd = new GUIStyle();
+            public static readonly GUIStyle fileArea = new GUIStyle();
+
+            static Styles()
+            {
+                paddedArea.padding = new RectOffset(10, 10, 0, 10);
+
+                searchField.fixedHeight = 0;
+
+                scroll.margin = new RectOffset(0, 0, 10, 10);
+                scroll.padding = new RectOffset(1, 0, 0, 0);
+
+                packageEven.padding = new RectOffset(5, 5, 5, 5);
+                packageEven.margin = new RectOffset();
+
+                packageOdd.padding = new RectOffset(5, 5, 5, 5);
+                packageOdd.margin = new RectOffset();
+
+                fileArea.padding.left = 10;
+            }
+        }
+
         private enum UnityPMTab
         {
             Packages,
@@ -51,6 +79,8 @@ namespace UnityUtils.UnityPM
 
         void OnEnable()
         {
+            titleContent = new GUIContent("UnityPM", EditorGUIUtility.FindTexture("d_Toolbar Plus"));
+
             settings = new Settings();
             settings.LoadSettings();
 
@@ -101,6 +131,10 @@ namespace UnityUtils.UnityPM
 
         void DrawPackages()
         {
+            //
+            // Search section
+            //
+
             EditorGUILayout.BeginVertical();
             if (GUILayout.Button("Refresh"))
             {
@@ -113,29 +147,45 @@ namespace UnityUtils.UnityPM
                 packages = newPackages;
                 Debug.Log($"Pulled {newPackages.Count} packages from {settings.sources.Count} sources!");
             }
-            EditorGUILayout.Space();
 
-            searchText = EditorGUILayout.TextField("Search", searchText);
+            EditorGUILayout.Space();
+            
+            searchText = EditorGUILayout.TextField(searchText, Styles.searchField);
+
             EditorGUILayout.EndVertical();
 
-            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+            //
+            // Package list
+            //
+            
+            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, Styles.scroll);
 
+            bool oddEven = false;
             foreach (Package package in packages)
             {
+                if (package.files.Count == 0 && package.unityPackages.Count == 0)
+                    continue;
+
                 if (!MatchPackage(package, searchText))
                     continue;
 
-                EditorGUILayout.LabelField(package.name ?? "Unnamed Package");
+                oddEven = !oddEven;
+
+                EditorGUILayout.BeginVertical(oddEven ? Styles.packageEven : Styles.packageOdd);
+
+                EditorGUILayout.LabelField(package.name ?? "Unnamed Package", style: EditorStyles.boldLabel);
+
+                EditorGUILayout.LabelField(package.source.Name, style: EditorStyles.miniLabel);
 
                 if (package.unityPackages?.Count > 0)
                 {
-                    package.GUIFoldoutPackages = EditorGUILayout.BeginFoldoutHeaderGroup(package.GUIFoldoutPackages, "Unity Packages");
-                    if (package.GUIFoldoutPackages)
-                    {
-                        foreach (UnityPackage unityPackage in package.unityPackages)
+                    EditorGUILayout.LabelField("Unity Packages", EditorStyles.boldLabel);
+
+                    EditorGUILayout.BeginVertical(Styles.fileArea);
+                    foreach (UnityPackage unityPackage in package.unityPackages)
                         {
                             bool inQueue = installQueue.Contains(unityPackage);
-                            if (EditorGUILayout.Toggle(unityPackage.Name, inQueue))
+                            if (EditorGUILayout.ToggleLeft(unityPackage.Name, inQueue))
                             {
                                 if (!inQueue)
                                     installQueue.Add(unityPackage);
@@ -146,19 +196,18 @@ namespace UnityUtils.UnityPM
                                     installQueue.Remove(unityPackage);
                             }
                         }
-                    }
-                    EditorGUILayout.EndFoldoutHeaderGroup();
+                    EditorGUILayout.EndVertical();
                 }
 
                 if (package.files?.Count > 0)
                 {
-                    package.GUIFoldoutFiles = EditorGUILayout.BeginFoldoutHeaderGroup(package.GUIFoldoutFiles, "Files");
-                    if (package.GUIFoldoutFiles)
-                    {
-                        foreach (File file in package.files)
+                    EditorGUILayout.LabelField("Files", EditorStyles.boldLabel);
+
+                    EditorGUILayout.BeginVertical(Styles.fileArea);
+                    foreach (File file in package.files)
                         {
                             bool inQueue = installQueue.Contains(file);
-                            if (EditorGUILayout.Toggle(file.Name, inQueue))
+                            if (EditorGUILayout.ToggleLeft(file.Name, inQueue))
                             {
                                 if (!inQueue)
                                     installQueue.Add(file);
@@ -168,17 +217,20 @@ namespace UnityUtils.UnityPM
                                 if (inQueue)
                                     installQueue.Remove(file);
                             }
-                        }
                     }
-                    EditorGUILayout.EndFoldoutHeaderGroup();
+                    EditorGUILayout.EndVertical();
                 }
-
-                EditorGUILayout.Space();
+                EditorGUILayout.EndVertical();
             }
 
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndScrollView();
 
+            //
+            // Install section
+            //
+
+            EditorGUILayout.Space();
             GUILayout.BeginVertical();
             installQueueList.DoLayoutList();
             dontAsk = EditorGUILayout.Toggle("Don't ask", dontAsk);
@@ -246,6 +298,10 @@ namespace UnityUtils.UnityPM
         void OnGUI()
         {
             tab = (UnityPMTab)GUILayout.Toolbar((int)tab, Enum.GetNames(typeof(UnityPMTab)));
+            EditorGUILayout.BeginVertical(Styles.paddedArea);
+            EditorGUILayout.BeginVertical();
+
+            EditorGUILayout.Space();
             
             switch (tab)
             {
@@ -256,6 +312,9 @@ namespace UnityUtils.UnityPM
                     settings.DrawUI();
                     break;
             }
+
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.EndVertical();
         }
     }
 }
