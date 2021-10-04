@@ -96,6 +96,8 @@ namespace UnityUtils.ComponentPropertyCopy
 
 		public void OnEnable()
 		{
+			titleContent = new GUIContent("Component Property Copy", EditorGUIUtility.FindTexture("d_FilterByType"));
+			
 			target = this;
 			so = new SerializedObject(target);
 			dstProp = so.FindProperty("dsts");

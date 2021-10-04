@@ -19,6 +19,11 @@ namespace UnityUtils
         List<string> materials = new List<string>();
         Vector2 scroll;
 
+        private void OnEnable()
+        {
+            titleContent = new GUIContent("Shader Occurence", EditorGUIUtility.FindTexture("d_SceneViewLighting"));
+        }
+
         void OnGUI()
         {
             Shader prev = shader;
