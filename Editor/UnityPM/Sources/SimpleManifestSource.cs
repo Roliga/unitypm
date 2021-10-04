@@ -70,6 +70,8 @@ namespace UnityUtils.UnityPM.Sources
             }
         }
 
+        public Dictionary<string, JSONObject> Presets => null;
+
         private string url;
         private string manifestName;
 

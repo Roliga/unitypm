@@ -68,6 +68,19 @@ namespace UnityUtils.UnityPM.Sources
             }
         }
 
+        public Dictionary<string, JSONObject> Presets { get; } = new Dictionary<string, string>
+                {
+                    { "Unity Utils", "Roliga/unity-utils" },
+                    { "Avatar 3.0 Emulator", "lyuma/Av3Emulator" },
+                    { "Pumkin's Avatar Tools", "rurre/PumkinsAvatarTools" },
+                    { "UdonSharp", "MerlinVR/UdonSharp" },
+                    { "CyanEmu", "CyanLaser/CyanEmu" }
+                }.ToDictionary(repo => repo.Key, repo => {
+                    JSONObject preset = new JSONObject();
+                    preset["repo"] = repo.Value;
+                    return preset;
+                });
+
         private string repo;
         private bool latest = true;
 
@@ -114,7 +127,7 @@ namespace UnityUtils.UnityPM.Sources
         public void LoadSettings(JSONObject settings)
         {
             repo = settings["repo"];
-            latest = settings["latest"];
+            latest = settings["latest"].IsBoolean ? settings["latest"].AsBool : latest;
         }
 
         public JSONObject SaveSettings()

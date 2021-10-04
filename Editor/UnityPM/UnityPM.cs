@@ -18,7 +18,7 @@ namespace UnityUtils.UnityPM
         UnityPMTab tab = UnityPMTab.Packages;
 
         List<Installable> installQueue = new List<Installable>();
-        Dictionary<Installable, InstallStatus> installQueueStatus;
+        Dictionary<Installable, InstallStatus> installQueueStatus = new Dictionary<Installable, InstallStatus>();
         ReorderableList installQueueList;
         bool dontAsk = false;
         string downloadFileDirectory = "/";
@@ -37,6 +37,7 @@ namespace UnityUtils.UnityPM
             public static readonly GUIStyle packageEven = new GUIStyle("Box");
             public static readonly GUIStyle packageOdd = new GUIStyle();
             public static readonly GUIStyle fileArea = new GUIStyle();
+            public static readonly GUIStyle clearQueueButton = new GUIStyle(GUI.skin.button);
 
             static Styles()
             {
@@ -54,6 +55,8 @@ namespace UnityUtils.UnityPM
                 packageOdd.margin = new RectOffset();
 
                 fileArea.padding.left = 10;
+
+                clearQueueButton.stretchWidth = false;
             }
         }
 
@@ -84,7 +87,7 @@ namespace UnityUtils.UnityPM
             settings = new Settings();
             settings.LoadSettings();
 
-            installQueueList = new ReorderableList(installQueue, typeof(UnityEngine.Object), true, true, false, true)
+            installQueueList = new ReorderableList(installQueue, typeof(UnityEngine.Object), true, true, true, true)
             {
                 drawHeaderCallback = (rect) =>
                 {
@@ -99,11 +102,69 @@ namespace UnityUtils.UnityPM
 
                     EditorGUI.LabelField(rect, installable.Name);
 
-                    if(installQueueStatus != null && installQueueStatus.ContainsKey(installable))
+                    if(installQueueStatus.ContainsKey(installable))
                     {
                         string status = Enum.GetName(typeof(InstallStatus), installQueueStatus[installable]);
                         EditorGUI.LabelField(statusRect, status);
                     }
+                },
+                onAddDropdownCallback = (Rect buttonRect, ReorderableList l) =>
+                {
+                    GenericMenu menu = new GenericMenu();
+                    menu.AddDisabledItem(new GUIContent("Presets"));
+                    menu.AddSeparator("");
+
+                    foreach (QueuePreset preset in settings.queuePresets)
+                    {
+                        menu.AddItem(new GUIContent(preset.Name), false, (p) => {
+
+                            List<Installable> newQueue = new List<Installable>();
+                            List<QueuePresetEntry> notFound = new List<QueuePresetEntry>();
+
+                            foreach(QueuePresetEntry entry in ((QueuePreset)p).entries)
+                            {
+                                var i = (from package in packages
+                                          where package.source.Name == entry.sourceName
+                                          && package.name == entry.packageName
+                                          from installable in entry.isPackage ? package.unityPackages : package.files.Cast<Installable>()
+                                          where installable.Name == entry.fileName
+                                          select installable).FirstOrDefault();
+
+                                if (i == null)
+                                    notFound.Add(entry);
+                                else
+                                    newQueue.Add(i);
+                            }
+
+                            if (notFound.Count > 0)
+                            {
+                                string msg = $"{notFound.Count} packages from the preset could not be found. Replace the queue anyway?";
+                                if (EditorUtility.DisplayDialog("Replace queue",
+                                    msg,
+                                    "Replace", "Cancel"))
+                                {
+                                    installQueue.Clear();
+                                    installQueueStatus.Clear();
+                                    installQueue.AddRange(newQueue);
+                                }
+                            }
+                            else
+                            {
+                                installQueue.Clear();
+                                installQueueStatus.Clear();
+                                installQueue.AddRange(newQueue);
+                            }
+
+                        }, preset);
+                    }
+
+                    menu.AddSeparator("");
+                    menu.AddItem(new GUIContent("Save Queue..."), false, () =>
+                    {
+                        PopupWindow.Show(buttonRect, new AddQueuePresetWindow(installQueue, settings.queuePresets, packages));
+                    });
+
+                    menu.ShowAsContext();
                 }
             };
         }
@@ -236,14 +297,21 @@ namespace UnityUtils.UnityPM
             dontAsk = EditorGUILayout.Toggle("Don't ask", dontAsk);
             if (installQueue.OfType<File>().Any())
                 downloadFileDirectory = EditorGUILayout.TextField("Download Files To:", downloadFileDirectory);
+            EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Install"))
             {
-                installQueueStatus = new Dictionary<Installable, InstallStatus>();
+                installQueueStatus.Clear();
                 //foreach (Installable installable in installQueue)
                 //    installQueueStatus.Add(installable, false);
                 installQueue.GetEnumerator().Dispose();
                 InstallNext(true, installQueue.ToList().GetEnumerator());
             }
+            if (GUILayout.Button("Clear Queue", Styles.clearQueueButton))
+            {
+                installQueue.Clear();
+                installQueueStatus.Clear();
+            }
+            EditorGUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
 

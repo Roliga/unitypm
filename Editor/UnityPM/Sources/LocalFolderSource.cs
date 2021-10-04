@@ -79,6 +79,8 @@ namespace UnityUtils.UnityPM.Sources
             }
         }
 
+        public Dictionary<string, JSONObject> Presets => null;
+
         private string path;
         private bool subFolders;
         private bool separatePackages;

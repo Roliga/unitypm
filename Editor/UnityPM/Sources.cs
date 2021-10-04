@@ -19,8 +19,9 @@ namespace UnityUtils.UnityPM
     public interface ISourceWithEditUI : ISource
     {
         ISourceEditUI GetEditUI();
+        Dictionary<string, JSONObject> Presets { get; }
     }
-
+    
     public interface ISourceWithSettings : ISource
     {
         JSONObject SaveSettings();

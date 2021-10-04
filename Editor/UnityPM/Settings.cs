@@ -7,6 +7,8 @@ using System.Xml;
 using System.Xml.Serialization;
 using SimpleJSON;
 using System.IO;
+using System.Collections.Specialized;
+using System.Linq;
 
 namespace UnityUtils.UnityPM
 {
@@ -15,6 +17,37 @@ namespace UnityUtils.UnityPM
         private class Settings
         {
             public List<ISource> sources = new List<ISource>();
+            public List<QueuePreset> queuePresets = new List<QueuePreset>()
+            {
+                new QueuePreset("A preset")
+                {
+                    entries = new List<QueuePresetEntry>()
+                    {
+                        new QueuePresetEntry()
+                        {
+                            sourceName = "VRChat SDKs",
+                            packageName = "VRChat SDK3",
+                            fileName = "SDK3 Worlds",
+                            isPackage = true
+                        },
+                        new QueuePresetEntry()
+                        {
+                            sourceName = "VRChat SDKs",
+                            packageName = "VRChat SDK3",
+                            fileName = "SDK3 Avatars",
+                            isPackage = true
+                        },
+                        new QueuePresetEntry()
+                        {
+                            sourceName = "VRChat SDKs",
+                            packageName = "VRChat SDK33",
+                            fileName = "SDK3 Avatars",
+                            isPackage = true
+                        }
+                    }
+                }
+            };
+
             public string CacheDirectory
             {
                 get
@@ -38,6 +71,7 @@ namespace UnityUtils.UnityPM
             public bool UseCache = false;
 
             private readonly ReorderableList sourcesList;
+            private readonly ReorderableList queuePresetsList;
             private bool useCustomCacheDirectory;
 
             public void LoadSettings()
@@ -47,7 +81,9 @@ namespace UnityUtils.UnityPM
                 if (settingsJSON is null)
                     return;
 
+#if UNITY_UTILS_DEBUG
                 Debug.Log("Loaded JSON:\n\n" + settingsJSON.ToString(4));
+#endif
 
                 try
                 {
@@ -61,6 +97,23 @@ namespace UnityUtils.UnityPM
                             ((ISourceWithSettings)source).LoadSettings((JSONObject)sourceJSON["Settings"]);
 
                         sources.Add(source);
+                    }
+
+                    queuePresets.Clear();
+                    foreach (JSONObject presetJSON in settingsJSON["queue_presets"])
+                    {
+                        QueuePreset preset = new QueuePreset(presetJSON["name"]);
+                        foreach (JSONObject entryJSON in presetJSON["entries"])
+                        {
+                            preset.entries.Add(new QueuePresetEntry()
+                            {
+                                sourceName = entryJSON["source_name"],
+                                packageName = entryJSON["package_name"],
+                                fileName = entryJSON["file_name"],
+                                isPackage = entryJSON["is_package"],
+                            });
+                        }
+                        queuePresets.Add(preset);
                     }
                 }
                 catch (Exception)
@@ -86,18 +139,40 @@ namespace UnityUtils.UnityPM
                 }
                 settingsJSON.Add("Sources", sourceArrayJSON);
 
+                JSONArray presetArrayJSON = new JSONArray();
+                foreach(QueuePreset preset in queuePresets)
+                {
+                    JSONObject presetJSON = new JSONObject();
+                    presetJSON["name"] = preset.Name;
+
+                    JSONArray entriesJSON = new JSONArray();
+                    foreach(QueuePresetEntry entry in preset.entries)
+                    {
+                        JSONObject entryJSON = new JSONObject();
+                        entryJSON["source_name"] = entry.sourceName;
+                        entryJSON["package_name"] = entry.packageName;
+                        entryJSON["file_name"] = entry.fileName;
+                        entryJSON["is_package"] = entry.isPackage;
+                        entriesJSON.Add(entryJSON);
+                    }
+                    presetJSON["entries"] = entriesJSON;
+
+                    presetArrayJSON.Add(presetJSON);
+                }
+                settingsJSON["queue_presets"] = presetArrayJSON;
+
                 EditorPrefs.SetString("UnityPMSettings", settingsJSON.ToString());
+
+#if UNITY_UTILS_DEBUG
                 Debug.Log("Saved JSON:\n\n" + settingsJSON.ToString(4));
+#endif
             }
 
             public void DrawUI()
             {
                 sourcesList.DoLayoutList();
-
-                // if (GUILayout.Button("Save"))
-                //     SaveSettings();
-                // if (GUILayout.Button("Load"))
-                //     LoadSettings();
+                EditorGUILayout.Space();
+                queuePresetsList.DoLayoutList();
             }
 
             public Settings()
@@ -142,6 +217,18 @@ namespace UnityUtils.UnityPM
                         }
 
                         menu.ShowAsContext();
+                    }
+                };
+
+                queuePresetsList = new ReorderableList(queuePresets, typeof(UnityEngine.Object), false, true, false, true)
+                {
+                    drawHeaderCallback = (rect) =>
+                    {
+                        EditorGUI.LabelField(rect, "Queue Presets");
+                    },
+                    drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+                    {
+                        EditorGUI.LabelField(rect, queuePresets[index].Name);
                     }
                 };
             }
