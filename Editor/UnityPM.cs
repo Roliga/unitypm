@@ -354,7 +354,7 @@ namespace UnityUtils.UnityPM
                 }
                 else
                 {
-                    string tmpPath = $"{settings.CacheDirectory}/downloading";
+                    string tmpPath = $"{settings.CacheDirectory}/downloading.unitypackage";
                     file.GetWebClient().DownloadFile(file.GetURI(), tmpPath);
                     installQueueStatus[enumerator.Current] = InstallStatus.Installing;
 
